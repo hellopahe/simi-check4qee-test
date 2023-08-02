@@ -100,7 +100,7 @@ lex = LexRank()
 
 def randeng_extract(content):
     sentences = lex.find_central(content)
-    return "原文\n".join((sentence + "\n") for sentence in sentences) \
+    return str(list((f"{str(index)}: " + sentence + "\n") for index, sentence in enumerate(sentences))) \
            + "\n摘要\n" \
            + str(list(t_randeng.extract(sentence) for sentence in sentences))
 
@@ -121,7 +121,7 @@ with gr.Blocks() as app:
     gr.Markdown("从下面的标签选择测试模块 [摘要生成,相似度检测]")
     with gr.Tab("LexRank->Randeng-Pegasus-523M"):
         text_input_1 = gr.Textbox(label="请输入长文本:", max_lines=1000)
-        text_output_1 = gr.Textbox(label="摘要文本")
+        text_output_1 = gr.Textbox(label="摘要文本", lines=10)
         text_button_1 = gr.Button("生成摘要")
     # with gr.Tab("LexRank->Tuoling-6B-chatGLM"):
     #     text_input = gr.Textbox(label="请输入长文本:", max_lines=1000)
