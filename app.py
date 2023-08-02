@@ -92,7 +92,7 @@ class LexRank(object):
 
 # ---===--- worker instances ---===---
 t_randeng = SummaryExtractor()
-t_tuoling = Tuoling_6B_extractor()
+# t_tuoling = Tuoling_6B_extractor()
 
 embedder = Embed()
 lex = LexRank()
@@ -102,9 +102,9 @@ def randeng_extract(content):
     sentences = lex.find_central(content)
     return str(list(t_randeng.extract(sentence) for sentence in sentences))
 
-def tuoling_extract(content):
-    sentences = lex.find_central(content)
-    return str(list(t_tuoling.extract(sentence) for sentence in sentences))
+# def tuoling_extract(content):
+#     sentences = lex.find_central(content)
+#     return str(list(t_tuoling.extract(sentence) for sentence in sentences))
 
 def similarity_check(query, doc):
     doc_list = doc.split("\n")
@@ -117,18 +117,14 @@ def similarity_check(query, doc):
 
 with gr.Blocks() as app:
     gr.Markdown("从下面的标签选择测试模块 [摘要生成,相似度检测]")
-    # with gr.Tab("CamelBell-Chinese-LoRA"):
-    #     text_input = gr.Textbox()
-    #     text_output = gr.Textbox()
-    #     text_button = gr.Button("生成摘要")
     with gr.Tab("LexRank->Randeng-Pegasus-523M"):
         text_input_1 = gr.Textbox(label="请输入长文本:", max_lines=1000)
         text_output_1 = gr.Textbox(label="摘要文本")
         text_button_1 = gr.Button("生成摘要")
-    with gr.Tab("LexRank->Tuoling-6B-chatGLM"):
-        text_input = gr.Textbox(label="请输入长文本:", max_lines=1000)
-        text_output = gr.Textbox(label="摘要文本")
-        text_button = gr.Button("生成摘要")
+    # with gr.Tab("LexRank->Tuoling-6B-chatGLM"):
+    #     text_input = gr.Textbox(label="请输入长文本:", max_lines=1000)
+    #     text_output = gr.Textbox(label="摘要文本")
+    #     text_button = gr.Button("生成摘要")
     with gr.Tab("相似度检测"):
         with gr.Row():
             text_input_query = gr.Textbox(label="查询文本")
@@ -136,7 +132,7 @@ with gr.Blocks() as app:
         text_button_similarity = gr.Button("对比相似度")
         text_output_similarity = gr.Textbox()
 
-    text_button.click(tuoling_extract, inputs=text_input, outputs=text_output)
+    # text_button.click(tuoling_extract, inputs=text_input, outputs=text_output)
     text_button_1.click(randeng_extract, inputs=text_input_1, outputs=text_output_1)
     text_button_similarity.click(similarity_check, inputs=[text_input_query, text_input_doc], outputs=text_output_similarity)
 
