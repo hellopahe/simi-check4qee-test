@@ -87,8 +87,12 @@ class LexRank(object):
             if num < 0 and index == 0:
                 ptr = index
                 break
-
-        return list(sentences[index] for index in most_central_sentence_indices[0: ptr + 1])
+        for index in most_central_sentence_indices:
+            num -= len(sentences[index])
+            if num < 0 and index > 0:
+                ptr = index + 1
+                break
+        return list(sentences[index] for index in most_central_sentence_indices[0: ptr])
 
 # ---===--- worker instances ---===---
 t_randeng = SummaryExtractor()
@@ -100,9 +104,13 @@ lex = LexRank()
 
 def randeng_extract(content):
     sentences = lex.find_central(content)
-    return str(list((f"{str(index)}: " + sentence + "\n") for index, sentence in enumerate(sentences))) \
-           + "\n摘要\n" \
-           + str(list(t_randeng.extract(sentence) for sentence in sentences))
+    output = "原文: \n"
+    for index, sentence in enumerate(sentences):
+        output += f"{index}: {sentence}\n"
+    output += "摘要:\n"
+    for index, sentence in enumerate(sentences):
+        output += f"{index}: {t_randeng.extract(sentence)}\n"
+    return output
 
 # def tuoling_extract(content):
 #     sentences = lex.find_central(content)
