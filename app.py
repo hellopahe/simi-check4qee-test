@@ -88,7 +88,7 @@ class LexRank(object):
                 ptr = index
                 break
 
-        return list(sentences[index] for index in most_central_sentence_indices[0: ptr])
+        return list(sentences[index] for index in most_central_sentence_indices[0: ptr + 1])
 
 # ---===--- worker instances ---===---
 t_randeng = SummaryExtractor()
