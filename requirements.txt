@@ -7,3 +7,8 @@ pandas
 sentence-transformers
 
 rouge
+jieba
+deepspeed
+jieba-fast
+protobuf
+datasets
