@@ -1,8 +1,12 @@
+import numpy
 import torch
 import gradio as gr
 
 from transformers import PegasusForConditionalGeneration, Text2TextGenerationPipeline
 from article_extractor.tokenizers_pegasus import PegasusTokenizer
+from embed import Embed
+
+import tensorflow as tf
 
 
 class SummaryExtractor(object):
@@ -17,18 +21,22 @@ class SummaryExtractor(object):
 
 
 t_randeng = SummaryExtractor()
+embedder = Embed()
 
 
 def randeng_extract(content):
     return t_randeng.extract(content)
 
-def similarity_check(query: str, doc: str):
-    doc_list = doc.split("\n")
 
-    return "similarity result"
+def similarity_check(inputs: list):
+    doc_list = inputs[1].split("\n")
+    doc_list.append(inputs[0])
+    embedding_list = embedder.encode(doc_list)
+    scores = (embedding_list[-1] @ tf.transpose(embedding_list[:-1]))[0].numpy().tolist()
+    return numpy.array2string(scores, separator=',')
 
 with gr.Blocks() as app:
-    gr.Markdown("从下面的标签选择不同的摘要模型, 在左侧输入原文")
+    gr.Markdown("从下面的标签选择测试模块 [摘要生成,相似度检测]")
     # with gr.Tab("CamelBell-Chinese-LoRA"):
     #     text_input = gr.Textbox()
     #     text_output = gr.Textbox()
@@ -37,11 +45,6 @@ with gr.Blocks() as app:
         text_input_1 = gr.Textbox()
         text_output_1 = gr.Textbox()
         text_button_1 = gr.Button("生成摘要")
-    # with gr.Tab("Flip Image"):
-    #     with gr.Row():
-    #         image_input = gr.Image()
-    #         image_output = gr.Image()
-    #     image_button = gr.Button("Flip")
     with gr.Tab("相似度检测"):
         with gr.Row():
             text_input_query = gr.Textbox()
@@ -51,6 +54,6 @@ with gr.Blocks() as app:
 
     # text_button.click(tuoling_extract, inputs=text_input, outputs=text_output)
     text_button_1.click(randeng_extract, inputs=text_input_1, outputs=text_output_1)
-    text_button_similarity.click(similarity_check, inputs=text_input_query, outputs=text_input_doc)
+    text_button_similarity.click(similarity_check, inputs=[text_input_query, text_input_doc], outputs=text_output_similarity)
 
 app.launch()
