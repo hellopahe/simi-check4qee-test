@@ -12,3 +12,7 @@ deepspeed
 jieba-fast
 protobuf
 datasets
+
+gradio
+
+sentence-transformers

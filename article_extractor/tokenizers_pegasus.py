@@ -20,7 +20,7 @@ import sys
 # sys.path.append("../../../../")
 
 jieba.dt.tmp_dir = os.path.expanduser(
-    "../tmp/")
+    "tmp/")
 # jieba.enable_parallel(8)
 jieba.initialize()
 
