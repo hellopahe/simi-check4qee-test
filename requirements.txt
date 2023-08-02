@@ -1,0 +1,7 @@
+torch
+tensorflow
+
+transformers
+peft
+pandas
+sentence-transformers
