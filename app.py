@@ -139,6 +139,6 @@ with gr.Blocks() as app:
     text_button_similarity.click(similarity_check, inputs=[text_input_query, text_input_doc], outputs=text_output_similarity)
 
 app.launch(
-    # share=True,
+    share=True,
     # debug=True
            )
