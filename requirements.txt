@@ -5,3 +5,5 @@ transformers
 peft
 pandas
 sentence-transformers
+
+rouge

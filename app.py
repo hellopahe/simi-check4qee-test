@@ -1,7 +1,3 @@
-"""
-This script summarizes from a paragraph(normally 512 length).
-"""
-
 import torch
 import gradio as gr
 
@@ -14,16 +10,9 @@ class SummaryExtractor(object):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = PegasusForConditionalGeneration.from_pretrained('IDEA-CCNL/Randeng-Pegasus-523M-Summary-Chinese').to(self.device)
         self.tokenizer = PegasusTokenizer.from_pretrained("IDEA-CCNL/Randeng-Pegasus-523M-Summary-Chinese")
-
-
         self.text2text_genr = Text2TextGenerationPipeline(self.model, self.tokenizer, device=self.device)
 
     def extract(self, content: str, min=20, max=30) -> str:
-        # inputs = self.tokenizer(content, max_length=512, return_tensors='pt').to(device=self.device)
-        # summary_ids = self.model.generate(inputs['input_ids'])
-        # return self.tokenizer.batch_decode(summary_ids,
-        #                                       skip_special_tokens=True,
-        #                                       clean_up_tokenization_spaces=False)[0]
         return str(self.text2text_genr(content, do_sample=False, min_length=min, max_length=max, num_return_sequences=3)[0]["generated_text"])
 
 
@@ -34,6 +23,8 @@ def randeng_extract(content):
     return t_randeng.extract(content)
 
 def similarity_check(query: str, doc: str):
+    doc_list = doc.split("\n")
+
     return "similarity result"
 
 with gr.Blocks() as app:
