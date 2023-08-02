@@ -77,16 +77,8 @@ class LexRank(object):
         # We argsort so that the first element is the sentence with the highest score
         most_central_sentence_indices = numpy.argsort(-centrality_scores)
 
-        num = 500
+        num = 100
         ptr = 0
-        for index, sentence in enumerate(sentences):
-            num -= len(sentence)
-            if num < 0 and index > 0:
-                ptr = index - 1
-                break
-            if num < 0 and index == 0:
-                ptr = index
-                break
         for index in most_central_sentence_indices:
             num -= len(sentences[index])
             if num < 0 and index > 0:
