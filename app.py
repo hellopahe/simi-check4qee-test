@@ -22,7 +22,7 @@ class SummaryExtractor(object):
 
     def extract(self, content: str) -> str:
         print(content)
-        return str(self.text2text_genr(content, do_sample=False, num_return_sequences=3)[0]["generated_text"])
+        return str(self.text2text_genr(content, min_length=20, do_sample=False, num_return_sequences=3)[0]["generated_text"])
 
 class LexRank(object):
     def __init__(self):
@@ -40,7 +40,19 @@ class LexRank(object):
 
         # We argsort so that the first element is the sentence with the highest score
         most_central_sentence_indices = numpy.argsort(-centrality_scores)
-        return most_central_sentence_indices
+
+        num = 500
+        ptr = 0
+        for index, sentence in enumerate(sentences):
+            num -= len(sentence)
+            if num < 0 and index > 0:
+                ptr = index - 1
+                break
+            if num < 0 and index == 0:
+                ptr = index
+                break
+
+        return list(sentences[index] for index in most_central_sentence_indices[0: ptr])
 
 # ---===--- worker instances ---===---
 t_randeng = SummaryExtractor()
