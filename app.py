@@ -25,7 +25,7 @@ class SummaryExtractor(object):
 
     def extract(self, content: str) -> str:
         print(content)
-        return str(self.text2text_genr(content, min_length=20, do_sample=False, num_return_sequences=3)[0]["generated_text"])
+        return str(self.text2text_genr(content, do_sample=False, num_return_sequences=3)[0]["generated_text"])
 
 class Tuoling_6B_extractor(object):
     def __init__(self):
@@ -100,7 +100,9 @@ lex = LexRank()
 
 def randeng_extract(content):
     sentences = lex.find_central(content)
-    return str(list(t_randeng.extract(sentence) for sentence in sentences))
+    return "原文\n".join((sentence + "\n") for sentence in sentences) \
+           + "\n摘要\n" \
+           + str(list(t_randeng.extract(sentence) for sentence in sentences))
 
 # def tuoling_extract(content):
 #     sentences = lex.find_central(content)
