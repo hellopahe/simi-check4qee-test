@@ -16,3 +16,4 @@ datasets
 gradio
 
 sentence-transformers
+harvesttext
